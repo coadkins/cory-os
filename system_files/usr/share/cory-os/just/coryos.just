@@ -1,5 +1,5 @@
 # Install  Homebrews
-  ds-install-brews:
+  cory-install-brews:
   #!/usr/bin/env bash
   set -euo pipefail
 
@@ -8,5 +8,12 @@
   echo "Homebrews installation complete."
 
 
+# Enable System76
+  cory-enable-system76:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  sudo systemctl enable com.system76.PowerDaemon.service \
+  system76-power-wake \
+  system76-firmware.daemon --now \
 
-
+  sudo systemctl enable --user com.system76.FirmwareManager.Notify.timer
