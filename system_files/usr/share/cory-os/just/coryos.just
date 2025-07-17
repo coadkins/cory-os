@@ -109,23 +109,23 @@ cory-enable-system76:
     
     echo "=== Service Management Complete ==="
 
-# Optional: Show final status of all services
-echo "Final status check:"
-for service in "${SYSTEM76_SERVICES[@]}"; do
-    if service_exists "$service"; then
-        echo -n "$service: "
-        if is_service_enabled "$service"; then
-            echo -n "enabled, "
-        else
-            echo -n "disabled, "
+# Show final status of all services
+    echo "Final status check:"
+    for service in "${SYSTEM76_SERVICES[@]}"; do
+        if service_exists "$service"; then
+            echo -n "$service: "
+            if is_service_enabled "$service"; then
+                echo -n "enabled, "
+            else
+                echo -n "disabled, "
+            fi
+            if is_service_active "$service"; then
+                echo "running"
+            else
+                echo "stopped"
+            fi
         fi
-        if is_service_active "$service"; then
-            echo "running"
-        else
-            echo "stopped"
-        fi
-    fi
-done
+    done
 # Create ds-distrobox
 ds-distrobox-create:
     #!/usr/bin/bash
