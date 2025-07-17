@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ouex pipefail
 echo "installing COPR packages"
 
 declare -A RPM_PACKAGES=(
