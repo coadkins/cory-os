@@ -78,7 +78,7 @@ cory-enable-system76:
         "system76-firmware-daemon"
     )
     
-    for service in "${SYSTEM76_SERVICES[@]}"; do
+    for service in "$SYSTEM76_SERVICES[@]}"; do
         echo "Checking $service..."
         
         if service_exists "$service"; then
