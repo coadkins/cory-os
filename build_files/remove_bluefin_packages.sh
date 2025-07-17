@@ -2,4 +2,5 @@
 set -ouex pipefail
 # remove packages installed with dnf
 dnf remove -y \
-	code
+	code \
+	upower
