@@ -10,8 +10,3 @@ dnf install -y \
   firmware-manager \
   system76-acpi-dkms
 dnf copr disable szydell/system76
-systemctl enable com.system76.PowerDaemon.service \
-system76-power-wake \
-system76-firmware-daemon --now
-
-
