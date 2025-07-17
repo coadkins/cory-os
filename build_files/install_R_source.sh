@@ -36,6 +36,9 @@ if [$1 == "release"]; then
   ln -s /usr/share/R/${R_VERSION}/bin/R /usr/local/bin/R
   ln -s /usr/share/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
 fi
+## link to /var/opt so Positron can discover the installation
+mkdir -p /var/opt/R/${R_VERSION}/bin/
+ln -s /usr/share/R/${R_VERSION}/bin/R /var/opt/R/${R_VERSION}/bin/R
 
 ## use RSPM
 #!/bin/bash
