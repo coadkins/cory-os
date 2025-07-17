@@ -18,16 +18,114 @@ cory-install-flatpaks:
 cory-enable-system76:
     #!/usr/bin/bash
     set -eoux pipefail
-    echo "Disabling Gnome Power Profiles"
-    sudo systemctl stop power-profiles-daemon.service
-    sudo systemctl disable power-profiles-daemon.service
-    sudo systemctl mask power-profiles-daemon.service
-    echo "Enabling System76 background services..."
-    sudo systemctl enable com.system76.PowerDaemon.service \
-    system76-power-wake \
-    system76-firmware-daemon --now
-    echo "enabled!"
+    
+    # Function to check if a service is active (running)
+    is_service_active() {
+        systemctl is-active --quiet "$1" 2>/dev/null
+    }
+    
+    # Function to check if a service is enabled
+    is_service_enabled() {
+        systemctl is-enabled --quiet "$1" 2>/dev/null
+    }
+    
+    # Function to check if a service exists
+    service_exists() {
+        systemctl list-unit-files --type=service | grep -q "^$1"
+    }
+    
+    echo "=== Managing Gnome Power Profiles ==="
+    
+    # Check and manage power-profiles-daemon.service
+    SERVICE="power-profiles-daemon.service"
+    
+    if service_exists "$SERVICE"; then
+        echo "Found $SERVICE"
+        
+        # Check if service is running and stop it
+        if is_service_active "$SERVICE"; then
+            echo "Service $SERVICE is running, stopping it..."
+            sudo systemctl stop "$SERVICE"
+            echo "Service $SERVICE stopped"
+        else
+            echo "Service $SERVICE is not running"
+        fi
+        
+        # Check if service is enabled and disable it
+        if is_service_enabled "$SERVICE"; then
+            echo "Service $SERVICE is enabled, disabling it..."
+            sudo systemctl disable "$SERVICE"
+            echo "Service $SERVICE disabled"
+        else
+            echo "Service $SERVICE is not enabled"
+        fi
+        
+        # Mask the service
+        echo "Masking $SERVICE..."
+        sudo systemctl mask "$SERVICE"
+        echo "Service $SERVICE masked"
+    else
+        echo "Service $SERVICE not found on this system"
+    fi
+    
+    echo ""
+    echo "=== Managing System76 Services ==="
+    
+    # List of System76 services to enable
+    SYSTEM76_SERVICES=(
+        "com.system76.PowerDaemon.service"
+        "system76-power-wake"
+        "system76-firmware-daemon"
+    )
+    
+    for service in "${SYSTEM76_SERVICES[@]}"; do
+        echo "Checking $service..."
+        
+        if service_exists "$service"; then
+            echo "Found $service"
+            
+            # Check current status
+            if is_service_enabled "$service"; then
+                echo "Service $service is already enabled"
+            else
+                echo "Service $service is not enabled, enabling it..."
+                sudo systemctl enable "$service"
+                echo "Service $service enabled"
+            fi
+            
+            # Check if service is running
+            if is_service_active "$service"; then
+                echo "Service $service is already running"
+            else
+                echo "Service $service is not running, starting it..."
+                sudo systemctl start "$service"
+                echo "Service $service started"
+            fi
+        else
+            echo "WARNING: Service $service not found on this system"
+        fi
+        echo ""
+    done
+    
+    echo "=== Service Management Complete ==="
 
+# Optional: Show final status of all services
+echo "Final status check:"
+for service in "$SERVICE" "${SYSTEM76_SERVICES[@]}"; do
+    if service_exists "$service"; then
+        echo -n "$service: "
+        if is_service_enabled "$service"; then
+            echo -n "enabled, "
+        else
+            echo -n "disabled, "
+        fi
+        if is_service_active "$service"; then
+            echo "running"
+        else
+            echo "stopped"
+        fi
+    fi
+done
 # Create ds-distrobox
 ds-distrobox-create:
     #!/usr/bin/bash
