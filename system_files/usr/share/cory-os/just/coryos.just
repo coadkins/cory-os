@@ -18,9 +18,17 @@ cory-install-flatpaks:
 cory-enable-system76:
     #!/usr/bin/bash
     set -eoux pipefail
+    echo "Disabling Gnome Power Profiles"
+    sudo systemctl stop power-profiles-daemon.service
+    sudo systemctl disable power-profiles-daemon.service
+    sudo systemctl mask power-profiles-daemon.service
     echo "Enabling System76 background services..."
     sudo systemctl enable com.system76.PowerDaemon.service \
     system76-power-wake \
-    system76-firmware.daemon --now 
-    sudo systemctl enable --user com.system76.FirmwareManager.Notify.timer
     echo "enabled!"
+
+# Create ds-distrobox
+# TBD: create with home in working directory
+
+# Remove old r versions
+# TBD: remove old r versions
