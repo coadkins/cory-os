@@ -30,7 +30,6 @@ jobs:
       matrix:
         base_image:
           - kinoite
-          - cosmic-atomic
     with:
       base-image: ${{ matrix.base_image }}
       image-tag: latest
