@@ -29,7 +29,35 @@ cory-enable-system76:
     echo "enabled!"
 
 # Create ds-distrobox
-# TBD: create with home in working directory
+ds-distrobox-create:
+    #!/usr/bin/bash
+    set -eoux pipefail
 
-# Remove old r versions
-# TBD: remove old r versions
+    # Get the current working directory name and full path
+    PWD_NAME=$(basename "$PWD")
+    PWD_PATH="$PWD"
+    
+    # Display what we're about to do
+    echo "Creating distrobox container with:"
+    echo "  Name: $PWD_NAME"
+    echo "  Home: $PWD_PATH"
+    echo "  Image: ghcr.io/coadkins/ds-distrobox:latest"
+    
+    # Check if a container with this name already exists
+    if distrobox list | grep -q "^$PWD_NAME"; then
+        echo "Error: A distrobox container named '$PWD_NAME' already exists."
+        echo "Please remove it first with: distrobox rm $PWD_NAME"
+        exit 1
+    fi
+    
+    # Run the distrobox create command
+    echo "Running distrobox create..."
+    distrobox create \
+        --image ghcr.io/coadkins/ds-distrobox:latest \
+        --name "$PWD_NAME" \
+        --home "$PWD_PATH" \
+        --init
+    
+    echo
+    echo "Container '$PWD_NAME' created successfully!"
+    echo "To enter the container, run: distrobox enter $PWD_NAME"
