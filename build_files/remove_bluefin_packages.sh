@@ -2,4 +2,6 @@
 set -ouex pipefail
 # remove packages installed with dnf
 dnf remove -y \
-	code 
+	code \
+	power-profiles-daemon \
+	tlp
