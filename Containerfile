@@ -1,5 +1,6 @@
 # Load input values from github workflow
 ARG BASE_IMAGE=kinoite-main
+ARG BASE_IMAGE=bluefin-main
 RUN ECHO $BASE_IMAGE
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
@@ -70,7 +71,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_s76_firmware.sh
-
 RUN ostree container commit
     
 ### LINTING
