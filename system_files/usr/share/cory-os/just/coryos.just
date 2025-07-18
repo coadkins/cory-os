@@ -37,8 +37,7 @@ cory-install-system76:
     echo "=== Managing Gnome Power Profiles ==="
     
     # Check and manage power-profiles-daemon.service
-    MASK_SERVICE=("power-profiles-daemon.service",
-    "upower.service")
+    MASK_SERVICE=("power-profiles-daemon.service")
     
     for service in "${MASK_SERVICES[@]}"; do
         if service_exists $service; then
