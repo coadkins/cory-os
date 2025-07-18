@@ -10,3 +10,4 @@ dnf install -y \
   firmware-manager \
   system76-acpi-dkms
 dnf copr disable szydell/system76
+system76-firmware-cli schedule
