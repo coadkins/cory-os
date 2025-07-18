@@ -3,7 +3,6 @@ name: Build from testing branch
 on:
   push:
     branches:
-      - testing 
       - s76-firmware
   workflow_dispatch:
 
