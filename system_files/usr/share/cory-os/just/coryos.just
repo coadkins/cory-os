@@ -1,23 +1,23 @@
 # Install  Homebrews
 cory-install-brews:
-  #!/usr/bin/bash
-  set -eoux pipefail
+  #!/usr/bin/env bash
+  set -euo pipefail
   echo "Installing Cory's Favorite Homebrews..."
   xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/brews) brew install
   echo "Homebrews installation complete."
 
 # Install Flatpaks 
 cory-install-flatpaks:
-    #!/usr/bin/bash
-    set -eoux pipefail
+    #!/usr/bin/env bash
+    set -euo pipefail
     echo "Installing Cory's Favorite Flatpaks..."
     xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/flatpaks) flatpak -y --system install
     echo "Flatpak installation complete."
 
 # Enable System76
 cory-install-system76:
-    #!/usr/bin/bash
-    set -eoux pipefail
+    #!/usr/bin/env bash
+    set -euo pipefail
     
     # Function to check if a service is active (running)
     is_service_active() {
@@ -128,8 +128,8 @@ cory-install-system76:
     done
 # Create ds-distrobox
 ds-distrobox-create:
-    #!/usr/bin/bash
-    set -eoux pipefail
+    #!/usr/bin/env bash
+    set -euo pipefail
 
     # Get the current working directory name and full path
     PWD_NAME=$(basename "$(pwd)")
