@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - testing 
+      - s76-firmware
   workflow_dispatch:
 
 concurrency:
