@@ -12,14 +12,16 @@ R_HOME=${R_HOME:-"/usr/lib/R"}
 dnf -y builddep R
 
 # download and install
-# use /usr/share (not /opt, /usr/local, etc) 
+# use /usr/bin (not /opt, /usr/local, etc) 
 # so that R gets updated on the host 
-# system when the image updates
+# system when the image updates and Positron
+# can discover multiple installs
 wget "${DOWNLOAD_URL}" -O "/tmp/R.tar.gz"
 tar -C /tmp -xvzf /tmp/R.tar.gz
 cd /tmp/R-*/
 ./configure \
 --prefix=/usr/share/R/${R_VERSION} \
+--bindir=/usr/bin \
 --enable-R-shlib \
 --enable-memory-profiling \
 --with-readline \
@@ -30,15 +32,6 @@ cd /tmp/R-*/
 make
 make install
 make clean
-
-## Create symlinks
-if [$1 == "release"]; then
-  ln -s /usr/share/R/${R_VERSION}/bin/R /usr/local/bin/R
-  ln -s /usr/share/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
-fi
-## link to /var/opt so Positron can discover the installation
-mkdir -p /var/opt/R/${R_VERSION}/bin/
-ln -s /usr/share/R/${R_VERSION}/bin/R /var/opt/R/${R_VERSION}/bin/R
 
 ## use RSPM
 #!/bin/bash
@@ -58,10 +51,5 @@ cd ..
 rm -rf /tmp/R-*/
 rm -rf /tmp/"R.tar.gz"
 dnf autoremove
-
-# Check the R info
-echo -e "Check the R info...\n"
-
-R -q -e "sessionInfo()"
 
 echo -e "\nInstall R from source, done!"
