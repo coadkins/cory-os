@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         base_image:
-          - bluefin-dx 
+          - aurora-dx
     with:
       base-image: ${{ matrix.base_image }}
       image-tag: testing 
