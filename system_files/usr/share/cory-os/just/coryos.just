@@ -133,8 +133,8 @@ ds-distrobox-create:
     set -eoux pipefail
 
     # Get the current working directory name and full path
-    PWD_NAME=$(basename "$PWD")
-    PWD_PATH="$PWD"
+    PWD_NAME=$(basename "$(pwd)")
+    PWD_PATH="$(pwd)"
     
     # Display what we're about to do
     echo "Creating distrobox container with:"
