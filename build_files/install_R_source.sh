@@ -55,7 +55,6 @@ EOF
 
 ## Clean up from R source install
 cd ..
-rm -rf /tmp/*
 rm -rf /tmp/R-*/
 rm -rf /tmp/"R.tar.gz"
 dnf autoremove
