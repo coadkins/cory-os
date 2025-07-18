@@ -156,6 +156,5 @@ ds-distrobox-create:
         --home "$PWD_PATH" \
         --init
     
-    echo
     echo "Container '$PWD_NAME' created successfully!"
     echo "To enter the container, run: distrobox enter $PWD_NAME"
