@@ -15,7 +15,7 @@ cory-install-flatpaks:
     echo "Flatpak installation complete."
 
 # Enable System76
-cory-enable-system76:
+cory-install-system76:
     #!/usr/bin/bash
     set -eoux pipefail
     
@@ -37,38 +37,39 @@ cory-enable-system76:
     echo "=== Managing Gnome Power Profiles ==="
     
     # Check and manage power-profiles-daemon.service
-    SERVICE="power-profiles-daemon.service"
+    MASK_SERVICE=("power-profiles-daemon.service",
+    "upower.service")
     
-    if service_exists "$SERVICE"; then
-        echo "Found $SERVICE"
-        
-        # Check if service is running and stop it
-        if is_service_active "$SERVICE"; then
-            echo "Service $SERVICE is running, stopping it..."
-            sudo systemctl stop "$SERVICE"
-            echo "Service $SERVICE stopped"
+    for service in "${MASK_SERVICES[@]}"; do
+        if service_exists $service; then
+            echo "Found $service"
+            
+            # Check if service is running and stop it
+            if is_service_active $service; then
+                echo "Service $service is running, stopping it..."
+                sudo systemctl stop $service
+                echo "Service $service stopped"
+            else
+                echo "Service $service is not running"
+            fi
+            
+            # Check if service is enabled and disable it
+            if is_service_enabled $service; then
+                echo "Service $service is enabled, disabling it..."
+                sudo systemctl disable $service
+                echo "Service $SERVICE disabled"
+            else
+                echo "Service $SERVICE is not enabled"
+            fi
+            
+            # Mask the service
+            echo "Masking $SERVICE..."
+            sudo systemctl mask $service
+            echo "Service $SERVICE masked"
         else
-            echo "Service $SERVICE is not running"
+            echo "Service $SERVICE not found on this system"
         fi
-        
-        # Check if service is enabled and disable it
-        if is_service_enabled "$SERVICE"; then
-            echo "Service $SERVICE is enabled, disabling it..."
-            sudo systemctl disable "$SERVICE"
-            echo "Service $SERVICE disabled"
-        else
-            echo "Service $SERVICE is not enabled"
-        fi
-        
-        # Mask the service
-        echo "Masking $SERVICE..."
-        sudo systemctl mask "$SERVICE"
-        echo "Service $SERVICE masked"
-    else
-        echo "Service $SERVICE not found on this system"
-    fi
     
-    echo ""
     echo "=== Managing System76 Services ==="
     
     # List of System76 services to enable
@@ -81,24 +82,24 @@ cory-enable-system76:
     for service in "${SYSTEM76_SERVICES[@]}"; do
         echo "Checking $service..."
         
-        if service_exists "$service"; then
+        if service_exists $service; then
             echo "Found $service"
             
             # Check current status
-            if is_service_enabled "$service"; then
+            if is_service_enabled $service; then
                 echo "Service $service is already enabled"
             else
                 echo "Service $service is not enabled, enabling it..."
-                sudo systemctl enable "$service"
+                sudo systemctl enable $service
                 echo "Service $service enabled"
             fi
             
             # Check if service is running
-            if is_service_active "$service"; then
+            if is_service_active $service; then
                 echo "Service $service is already running"
             else
                 echo "Service $service is not running, starting it..."
-                sudo systemctl start "$service"
+                sudo systemctl start $service
                 echo "Service $service started"
             fi
         else
@@ -112,14 +113,14 @@ cory-enable-system76:
 # Show final status of all services
     echo "Final status check:"
     for service in "${SYSTEM76_SERVICES[@]}"; do
-        if service_exists "$service"; then
+        if service_exists $service; then
             echo -n "$service: "
-            if is_service_enabled "$service"; then
+            if is_service_enabled $service; then
                 echo -n "enabled, "
             else
                 echo -n "disabled, "
             fi
-            if is_service_active "$service"; then
+            if is_service_active $service; then
                 echo "running"
             else
                 echo "stopped"
