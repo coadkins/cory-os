@@ -41,6 +41,14 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_other_repos.sh
 
+COPY --from=ghcr.io/ublue-os/akmods-extra:sha256-f7ea8a085d2a9465adc4a406afc8519aa10b529944b49dc20b8bd3dddced19fb.sig /tmp/akmods-extra
+RUN find /tmp/akmods-extra
+## optionally install remove old and install new kernel
+dnf -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
+## install ublue support package and desired kmod(s)
+RUN dnf install /tmp/rpms/ublue-os/ublue-os-akmods*.rpm
+RUN dnf install /tmp/rpms/kmods/kmod-system76$.rpm
+
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
