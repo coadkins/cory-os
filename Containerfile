@@ -41,7 +41,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_other_repos.sh
 
-COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 /tmp/akmods-extra
+COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 / /tmp/akmods-extra
 RUN find /tmp/akmods-extra
 ## optionally install remove old and install new kernel
 RUN dnf -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
