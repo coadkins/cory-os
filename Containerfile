@@ -7,8 +7,13 @@ COPY build_files /
 
 # Base Image
 
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:42
+ARG FEDORA_VERSION=42
+
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
+
+FROM ghcr.io/ublue-os/akmods-extra:bazzite-42
+COPY / /tmp/akmods-extra
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -41,13 +46,10 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_other_repos.sh
 
-COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 /tmp/akmods-extra
-RUN find /tmp/akmods-extra
-## optionally install remove old and install new kernel
-RUN dnf -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
-## install ublue support package and desired kmod(s)
-RUN dnf install /tmp/rpms/ublue-os/ublue-os-akmods*.rpm
-RUN dnf install /tmp/rpms/kmods/kmod-system76$.rpm
+# Install system76 driver and dependencies
+RUN dnf install -y \
+    /tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
+    && rm -rf /tmp/akmods-extra
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
