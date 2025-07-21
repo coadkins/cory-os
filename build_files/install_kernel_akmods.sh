@@ -18,6 +18,6 @@ dnf5 -y --setopt=disable_excludes=* install \
 dnf5 versionlock add kernel kernel-devel kernel-devel-matched kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-tools kernel-tools-libs
 
 dnf5 -y install \
-    /var/tmp/akmods-rpms/ublue-os/ublue-os-akmods-addons*.rpms \
+    /var/tmp/akmods-rpms/ublue-os-akmods-addons*.rpms \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76-io*.rpm \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76*.rpm
