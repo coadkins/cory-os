@@ -13,7 +13,7 @@ FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
 
 FROM ghcr.io/ublue-os/akmods-extra:bazzite-${FEDORA_VERSION} AS akmods
-COPY --from=akmods /tmp/rpms /tmp/akmods-rpms
+COPY --from=akmods / /tmp/akmods-extra
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -48,9 +48,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 # Install system76 driver and dependencies
 RUN dnf install -y \
-    /tmp/akmods-rpms/ublue-os/ublue-os-akmods-addons*.rpm \
-    /tmp/akmods-rpms/kmods/kmod-system76*.rpm \
-    && rm -rf /tmp/akmods-rpms
+    /tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
+    && rm -rf /tmp/akmods-extra
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
