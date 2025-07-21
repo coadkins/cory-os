@@ -43,7 +43,10 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/install_other_repos.sh
 
 # Install system76 driver and dependencies
-RUN --mount=type=tmpfs, dst=/tmp \
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
      dnf install -y \
     /tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
     && rm -rf /tmp/akmods-extra
