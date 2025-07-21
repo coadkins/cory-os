@@ -9,7 +9,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:42
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
 
 ## Other possible base images include:
@@ -51,7 +51,7 @@ RUN --mount=type=cache,dst=/var/cache \
     --mount=type=bind,from=akmods-extra,src=/rpms,dst=/tmp/akmods-extra-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
-    /ctx/install-kernel-akmods.sh && \
+    /ctx/install_kernel_akmods.sh && \
     dnf5 -y config-manager setopt "*rpmfusion*".enabled=0 && \
     dnf5 -y copr enable bieszczaders/kernel-cachyos-addons && \
     dnf5 -y install \
