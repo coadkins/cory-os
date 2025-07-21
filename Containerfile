@@ -1,19 +1,15 @@
 # Load input values from github workflow
 ARG BASE_IMAGE=bluefin-dx
-RUN ECHO $BASE_IMAGE
+ARG FEDORA_VERSION=42
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-
-ARG FEDORA_VERSION=42
-
 FROM ghcr.io/ublue-os/${BASE_IMAGE}:42
 COPY system_files /
-
-FROM ghcr.io/ublue-os/akmods-extra:bazzite-42
-COPY / /tmp/akmods-extra
+# akmods-extra
+COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 / /tmp/akmods-extra
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
