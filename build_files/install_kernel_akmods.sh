@@ -7,8 +7,7 @@ trap 'echo "::endgroup::"' EXIT
 
 dnf5 -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-tools kernel-tools-libs kernel-uki-virt
 
-dnf5 -y install \
-    --disableexcludes=all \
+dnf5 -y --setopt=disable_excxludes=* install \
     /var/tmp/kernel-rpms/kernel-[0-9]*.rpm \
     /var/tmp/kernel-rpms/kernel-core-*.rpm \
     /var/tmp/kernel-rpms/kernel-modules-*.rpm \
