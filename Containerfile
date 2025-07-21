@@ -12,7 +12,7 @@ ARG FEDORA_VERSION=42
 FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
 
-FROM ghcr.io/ublue-os/akmods-extra:main-${FEDORA_VERSION} AS akmods
+FROM ghcr.io/ublue-os/akmods-extra:bazzite-${FEDORA_VERSION} AS akmods
 COPY --from=akmods /tmp/rpms /tmp/akmods-rpms
 
 ## Other possible base images include:
