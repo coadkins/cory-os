@@ -9,7 +9,7 @@ COPY build_files /
 
 ARG FEDORA_VERSION=42
 
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:42
 COPY system_files /
 
 FROM ghcr.io/ublue-os/akmods-extra:bazzite-42
@@ -47,7 +47,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/install_other_repos.sh
 
 # Install system76 driver and dependencies
-RUN dnf install -y \
+RUN --mount=type=tmpfs, dst=/tmp \
+     dnf install -y \
     /tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
     && rm -rf /tmp/akmods-extra
 
