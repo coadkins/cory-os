@@ -9,7 +9,7 @@ COPY build_files /
 FROM ghcr.io/ublue-os/${BASE_IMAGE}:42
 COPY system_files /
 # akmods-extra
-COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 / /tmp/akmods-extra
+COPY --from=ghcr.io/ublue-os/akmods-extra:bazzite-42 / /var/tmp/akmods-extra
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
@@ -48,8 +48,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
      dnf install -y \
-    /tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
-    && rm -rf /tmp/akmods-extra
+    /var/tmp/akmods-extra/rpms/kmods/kmod-system76*.rpm \
+    && rm -rf /var/tmp/akmods-extra
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
