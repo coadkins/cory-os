@@ -155,6 +155,8 @@ enable-system76:
          echo "Service $service not found on this system"
      fi
   done
+  echo "Restarting systemd daemon"
+  sudo systemctl daemon-reexec
   echo "=== Managing System76 Services ==="
   # List of System76 services to enable
   SYSTEM76_SERVICES=(
