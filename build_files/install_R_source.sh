@@ -57,7 +57,7 @@ EOF
 cd ..
 rm -rf /tmp/R-*/
 rm -rf /tmp/"R.tar.gz"
-dnf autoremove
+dnf -y autoremove
 
 # Check the R info
 echo -e "Check the R info...\n"
