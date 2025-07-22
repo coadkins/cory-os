@@ -8,7 +8,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}-testing
 COPY system_files /
 
 ## Other possible base images include:
