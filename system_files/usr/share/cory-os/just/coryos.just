@@ -9,7 +9,12 @@ install-cory-brews:
 # Install Flatpaks 
 install-cory-flatpaks:
   #!/usr/bin/env bash
-  set -euo pipefail# Enable System76
+  set -euo pipefail
+  echo "Installing Cory's Favorite Flatpaks..."
+  xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/flatpaks) flatpak -y --system install
+  echo "Flatpak installation complete."
+
+# Enable System76
 enable-system76:
   #!/usr/bin/env bash
   set -euo pipefail
@@ -106,9 +111,6 @@ enable-system76:
       fi
       fi
    done
-  echo "Installing Cory's Favorite Flatpaks..."
-  xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/flatpaks) flatpak -y --system install
-  echo "Flatpak installation complete."
 # Enable System76
 enable-system76:
   #!/usr/bin/env bash
