@@ -1,8 +1,7 @@
 # Load input values from github workflow
-ARG BASE_IMAGE="bluefin-dx"
+ARG BASE_IMAGE="bazzite"
 ARG FEDORA_VERSION="42"
 # Import akmods from bazzite to use system76 firmware
-FROM ghcr.io/ublue-os/akmods:bazzite-${FEDORA_VERSION} AS akmods
 FROM ghcr.io/ublue-os/akmods-extra:bazzite-${FEDORA_VERSION} AS akmods-extra
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
@@ -24,23 +23,13 @@ COPY system_files /
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
-# use bazzite kernel and system76 akmod
+# use system76-driver and system76-io akmods
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=akmods,src=/kernel-rpms,dst=/var/tmp/kernel-rpms \
-    --mount=type=bind,from=akmods,src=/rpms,dst=/var/tmp/akmods-rpms \
     --mount=type=bind,from=akmods-extra,src=/rpms,dst=/var/tmp/akmods-extra-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_kernel_akmods.sh && \
-    dnf5 -y config-manager setopt "*rpmfusion*".enabled=0 && \
-    dnf5 -y copr enable bieszczaders/kernel-cachyos-addons && \
-    dnf5 -y install \
-        scx-scheds && \
-    dnf5 -y copr disable bieszczaders/kernel-cachyos-addons && \
-    dnf5 -y copr enable bazzite-org/bazzite && \
-    dnf5 -y swap --repo copr:copr.fedorainfracloud.org:bazzite-org:bazzite bootc bootc && \
-    dnf5 -y copr disable bazzite-org/bazzite
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
@@ -89,12 +78,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_custom_just.sh
-
-RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=tmpfs,dst=/tmp \
-    /ctx/remove_bluefin_packages.sh
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
