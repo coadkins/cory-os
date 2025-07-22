@@ -55,6 +55,6 @@ EOF
 cd ..
 rm -rf /tmp/R-*/
 rm -rf /tmp/"R.tar.gz"
-dnf autoremove
+dnf -y autoremove
 
 echo -e "\nInstall R from source, done!"
