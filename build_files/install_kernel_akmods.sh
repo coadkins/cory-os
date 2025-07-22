@@ -19,5 +19,7 @@ dnf5 versionlock add kernel kernel-devel kernel-devel-matched kernel-core kernel
 
 dnf5 -y install \
     /var/tmp/akmods-rpms/ublue-os/ublue-os-akmods-addons*.rpm \
+    /var/tmp/akmods-extra-rpms/kmods/system76-driver-kmod-common*.rpm \
+    /var/tmp/akmods-extra-rpms/kmods/system76-io-kmod-common*.rpm \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76-io*.rpm \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76*.rpm
