@@ -21,6 +21,7 @@ tar -C /tmp -xvzf /tmp/R.tar.gz
 cd /tmp/R-*/
 ./configure \
 --prefix=/usr/share/R/${R_VERSION} \
+--bindir=/usr/share/R/${R_VERSION}/bin/ \
 --enable-R-shlib \
 --enable-memory-profiling \
 --with-readline \
@@ -34,8 +35,10 @@ make clean
 
 # create symlink to /usr/bin for latest version
 if [ $1 == "release" ]; then
-  ln -s /usr/share/R/${R_VERSION}/bin/R /usr/bin/R
-  ln -s /usr/share/R/${R_VERSION}/bin/Rscript /usr/bin/Rscript
+  mkdir -p /var/usrlocal/bin/
+  rm -f /var/usrlocal/bin/R
+  ln -s /usr/share/R/${R_VERSION}/bin/R /var/usrlocal/bin/R
+  ln -s /usr/share/R/${R_VERSION}/bin/Rscript /var/usrlocal/bin/Rscript
 fi
 
 ## use RSPM
