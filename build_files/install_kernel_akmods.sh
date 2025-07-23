@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eoux pipefail
-# install newer kernel
-dnf5 -y install \
+# install kernel 6.15.6 for system76 driver compatibility
+dnf5 -y --setopt=disable_excludes=* install \
     /var/tmp/kernel-rpms/kernel*.rpm \
     /var/tmp/kernel-rpms/kernel-core*.rpm \
     /var/tmp/kernel-rpms/kernel-modules*.rpm \
