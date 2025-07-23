@@ -33,7 +33,7 @@ make install
 make clean
 
 # create symlink to /usr/bin for latest version
-if [ $1 == "latest"]; then
+if [ $1 == "release" ]; then
   ln -s /usr/share/R/${R_VERSION}/bin/R /usr/bin/R
   ln -s /usr/share/R/${R_VERSION}/bin/Rscript /usr/bin/Rscript
 fi
