@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - s76-firmware
+      - bazzite-mods
   workflow_dispatch:
 
 concurrency:

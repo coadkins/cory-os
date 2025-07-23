@@ -13,6 +13,19 @@ dnf5 -y install \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76-io*.rpm \
     /var/tmp/akmods-extra-rpms/kmods/kmod-system76*.rpm
 
-dnf5 -y copr disable ssweeny/system76-hwe
+dnf5 -y remove \
+    kmod-kvmfr \
+    kmod-xone \
+    kmod-openrazer \
+    kmod-v412loopback \
+    kmod-wl \
+    kmod-framework-laptop \
+    kmod-nct6887 \
+    kmod-gcadapter_oc \
+    kmod-vhba \
+    kmod-gpd-fan \
+    kmod-ayaneo-platform \
+    kmod-ayn-platform \
+    kmod-bmi260
 
-# To Do: get rid of akmods that I don't want
+dnf5 -y copr disable ssweeny/system76-hwe
