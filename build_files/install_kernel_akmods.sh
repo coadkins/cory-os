@@ -2,11 +2,12 @@
 set -eoux pipefail
 # install kernel 6.15.6 for system76 driver compatibility
 dnf5 -y --setopt=disable_excludes=* install \
-    /var/tmp/kernel-rpms/kernel*.rpm \
-    /var/tmp/kernel-rpms/kernel-core*.rpm \
-    /var/tmp/kernel-rpms/kernel-modules*.rpm \
-    /var/tmp/kernel-rpms/kernel-modules-core*.rpm \
-    /var/tmp/kernel-rpms/kernel-modules-extra*.rpm
+    /tmp/kernel-rpms/kernel-[0-9]*.rpm \
+    /tmp/kernel-rpms/kernel-core-*.rpm \
+    /tmp/kernel-rpms/kernel-modules-*.rpm \
+    /tmp/kernel-rpms/kernel-tools-[0-9]*.rpm \
+    /tmp/kernel-rpms/kernel-tools-libs-[0-9]*.rpm \
+    /tmp/kernel-rpms/kernel-devel-*.rpm
 echo "::group::Executing install-kernel-akmods"
 trap 'echo "::endgroup::"' EXIT
 
