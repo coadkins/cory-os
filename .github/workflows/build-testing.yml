@@ -5,6 +5,7 @@ on:
     branches:
       - s76-firmware
       - bazzite-mods
+      - aurora-rebase
   workflow_dispatch:
 
 concurrency:
@@ -24,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         base_image:
-          - bazzite
+          - aurora 
     with:
       base-image: ${{ matrix.base_image }}
       image-tag: testing 

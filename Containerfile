@@ -3,12 +3,13 @@ ARG BASE_IMAGE="bazzite"
 ARG FEDORA_VERSION="42"
 # Import akmods from bazzite to use system76 firmware
 FROM ghcr.io/ublue-os/akmods-extra:bazzite-${FEDORA_VERSION} AS akmods-extra
+FROM ghcr.io/ublue-os/akmods:main-${FEDORA_VERSION} AS akmods-common
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}-testing
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
 
 ## Other possible base images include:
@@ -33,6 +34,8 @@ RUN --mount=type=cache,dst=/var/cache \
 
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
+    --mount=type=bind,from=akmods-common,src=/kernel-rpms,dst=/var/tmp/kernel-rpms \
+    --mount=type=bind,from=akmods-common,src=/rpms,dst=/var/tmp/akmods-rpms \
     --mount=type=bind,from=akmods-extra,src=/rpms,dst=/var/tmp/akmods-extra-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
