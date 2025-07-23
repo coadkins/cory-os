@@ -5,6 +5,7 @@ dnf5 versionlock add kernel kernel-devel kernel-devel-matched kernel-core kernel
 # install system76 support packages
 dnf5 -y copr enable szydell/system76
 dnf5 install -y \
+  system76-driver \
   system76-power \
   system76-firmware \
   firmware-manager
