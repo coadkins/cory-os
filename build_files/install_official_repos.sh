@@ -10,5 +10,7 @@ dnf5 install -y \
 	make \
     unixODBC-devel \
 	libcurl-devel \
-	openssl-devel
+	openssl-devel \
+	glpk-devel
+
 
