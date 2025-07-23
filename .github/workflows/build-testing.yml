@@ -3,8 +3,6 @@ name: Build from testing branch
 on:
   push:
     branches:
-      - s76-firmware
-      - bazzite-mods
       - aurora-rebase
   workflow_dispatch:
 
