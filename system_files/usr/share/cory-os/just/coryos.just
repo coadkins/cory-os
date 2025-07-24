@@ -1,7 +1,7 @@
 # Install  Homebrews
 install-cory-brews:
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -uo pipefail
   echo "Installing Cory's Favorite Homebrews..."
   xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/brews) brew install
   echo "Homebrews installation complete."
@@ -13,6 +13,7 @@ install-cory-flatpaks:
   echo "Installing Cory's Favorite Flatpaks..."
   xargs -a <(curl --retry 3 -sL https://raw.githubusercontent.com/coadkins/cory-os/main/repo_files/flatpaks) flatpak -y --system install
   echo "Flatpak installation complete."
+
 # Enable System76
 enable-system76:
   #!/usr/bin/env bash
@@ -29,10 +30,10 @@ enable-system76:
   service_exists() {
     systemctl list-unit-files --type=service | grep -q "^$1"
   }
-  echo "=== Managing Gnome Power Profiles ==="
-  # Check and manage power-profiles-daemon.service
-  MASK_SERVICES=("power-profiles-daemon.service")
-  for service in "${MASK_SERVICES[@]}"; do
+  echo "=== Managing Tuned Power Profiles ==="
+  # Check and manage tuned services
+  MASK_SERVICES=("tuned.service tuned-ppd")
+  for service in "$MASK_SERVICES"; do
     if service_exists $service; then
       echo "Found $service"
       # Check if service is running and stop it
@@ -73,16 +74,22 @@ enable-system76:
         echo "Service $service is already enabled"
       else
         echo "Service $service is not enabled, enabling it..."
-        sudo systemctl enable $service
-        echo "Service $service enabled"
+        if sudo systemctl enable $service; then
+          echo "Service $service enabled"
+        else
+          echo "Error: Service $service could not be enabled"
+        fi
       fi
       # Check if service is running
       if is_service_active $service; then
         echo "Service $service is already running"
       else
         echo "Service $service is not running, starting it..."
-        sudo systemctl start $service
-        echo "Service $service started"
+        if sudo systemctl start $service; then
+          echo "Service $service started"
+        else
+          echo "Error: Could not start $service"
+        fi
       fi
     else
       echo "WARNING: Service $service not found on this system"
