@@ -66,9 +66,9 @@ enable-system76:
       "com.system76.PowerDaemon.service system76-power-wake system76-firmware-daemon"
       )
   for service in $SYSTEM76_SERVICES; do
-    if [ ${systemctl is-enabled $service}="masked" ]; then
-      echo "Unmasking $service"
-      systemctl unmask $service
+    if [ "$(systemctl is-enabled $service 2>/dev/null)" = "masked" ]; then
+      echo Unmasking $service
+      systemctl unmask "$service"
     fi
     echo "Checking $service..."
     if service_exists $service; then
@@ -167,10 +167,11 @@ disable-system76:
       "tuned.service tuned-ppd"
       )
   for service in $TUNED_SERVICES; do
-    if [ ${systemctl is-enabled $service}="masked" ]; then
+    if [ "$(systemctl is-enabled $service 2>/dev/null)" = "masked" ]; then
       echo "Unmasking $service"
       systemctl unmask $service
     fi
+
     echo "Checking $service..."
     if service_exists $service; then
       echo "Found $service"
