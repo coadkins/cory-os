@@ -5,7 +5,7 @@ set -ouex pipefail
 echo "installing packages from official fedora repos"
 dnf5 install -y \
 	neovim \
-	emacs \
+	emacs-pgtk \
 	rsync \
 	make \
     unixODBC-devel \
