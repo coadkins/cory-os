@@ -8,7 +8,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}-testing
+FROM ghcr.io/ublue-os/${BASE_IMAGE}:${FEDORA_VERSION}
 COPY system_files /
 
 ## Other possible base images include:
@@ -29,6 +29,13 @@ RUN --mount=type=cache,dst=/var/cache \
     --mount=type=bind,from=akmods-extra,src=/rpms,dst=/var/tmp/akmods-extra-rpms \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
+    /ctx/install_kernel_mods.sh
+
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=bind,from=akmods-extra,src=/rpms,dst=/var/tmp/akmods-extra-rpms \
+    --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/tmp \
     /ctx/install_kernel_akmods.sh
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
@@ -42,12 +49,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/install_copr_repos.sh
-
-RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=tmpfs,dst=/tmp \
-    /ctx/install_R_source.sh "release" \
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
