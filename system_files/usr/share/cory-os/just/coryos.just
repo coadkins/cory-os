@@ -110,8 +110,8 @@ create-ds-distrobox:
   set -euo pipefail
 
   # Get the current working directory name and full path
-  PWD_NAME=$(basename "$(pwd)")
-  PWD_PATH="$(pwd)"
+  PWD_NAME=$(basename "$1")
+  PWD_PATH="$1"
   
   # Display what we're about to do
   echo "Creating distrobox container with:"
@@ -130,8 +130,8 @@ create-ds-distrobox:
   echo "Running distrobox create..."
   distrobox create \
       --image ghcr.io/coadkins/ds-distrobox:latest \
-      --name "$PWD_NAME" \
-      --home "$PWD_PATH" \
+      --name $PWD_NAME \
+      --home $PWD_PATH \
       --init
   
   echo "Container '$PWD_NAME' created successfully!"
