@@ -3,8 +3,7 @@ name: Build from testing branch
 on:
   push:
     branches:
-      - s76-firmware
-      - bazzite-mods
+      - testing
   workflow_dispatch:
 
 concurrency:
