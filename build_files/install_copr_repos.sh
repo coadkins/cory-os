@@ -6,8 +6,8 @@ declare -A RPM_PACKAGES=(
   ["copr:iucar/rstudio"]="rstudio-desktop"
   ["copr:iucar/duckdb"]="duckdb"
   ["copr:ublue-os/packages"]="ublue-brew"
-  ["terra"] = "zed" \
-  "ghostty"
+  ["terra"]="zed"
+  ["terra"]="ghostty"
 )
 
 # install COPR repos
