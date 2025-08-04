@@ -6,8 +6,7 @@ declare -A RPM_PACKAGES=(
   ["copr:iucar/rstudio"]="rstudio-desktop"
   ["copr:iucar/duckdb"]="duckdb"
   ["copr:ublue-os/packages"]="ublue-brew"
-  ["terra"]="zed"
-  ["terra"]="ghostty"
+  ["terra"]="zed ghostty"
 )
 
 # install COPR repos
@@ -21,7 +20,7 @@ for repo in "${!RPM_PACKAGES[@]}"; do
     dnf5 -y copr disable "$copr_repo"
 else
   # Handle regular packages
-  enable_opt="--enable-repo=$repo" || enable_opt=""
+  enable_opt="--enable-repo=$repo"
   cmd=(dnf5 -y install)
   [[ -n "enable_opt " ]] && cmd+=("$enable_opt")
   cmd+=("${pkg_array[@]}")
