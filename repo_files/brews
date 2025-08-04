@@ -1,4 +1,3 @@
-texlive
 typst
 uv
 yazi
@@ -7,3 +6,4 @@ fzf
 lazygit
 chezmoi
 atuin
+starship
