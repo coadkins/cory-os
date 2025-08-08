@@ -10,7 +10,7 @@ declare -A RPM_PACKAGES=(
   ["copr:iucar/duckdb"]="duckdb"
   ["copr:ublue-os/packages"]="ublue-brew"
   ["terra"]="zed ghostty"
-  ["librewolf"]="librewolf"
+  ["Librewolf Software Repository"]="librewolf"
 )
 
 # install COPR repos
