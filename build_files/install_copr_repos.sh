@@ -7,12 +7,6 @@ declare -A RPM_PACKAGES=(
   ["copr:iucar/duckdb"]="duckdb"
   ["copr:ublue-os/packages"]="ublue-brew"
   ["terra"]="zed ghostty"
-  ["docker-ce"]="\
-    containerd.io \
-    docker-buildx-plugin \
-    docker-ce \
-    docker-ce-cli \
-    docker-compose-plugin"
 )
 
 # install COPR repos
