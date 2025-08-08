@@ -3,7 +3,7 @@ set -ouex pipefail
 echo "installing COPR packages"
 
 # add docker ce repo
-dnf5 config-manager add-repo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+dnf5 config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
 declare -A RPM_PACKAGES=(
   ["copr:iucar/rstudio"]="rstudio-desktop"
   ["copr:iucar/duckdb"]="duckdb"
