@@ -4,7 +4,7 @@ echo "installing COPR packages"
 
 # Add librewolf repo
 wget https://repo.librewolf.net/librewolf.repo -O /tmp/librewolf.repo
-dnf5 config-manager addrepo --from=/tmp/librewolf.repo
+dnf5 config-manager addrepo --from-repofile=/tmp/librewolf.repo
 declare -A RPM_PACKAGES=(
   ["copr:iucar/rstudio"]="rstudio-desktop"
   ["copr:iucar/duckdb"]="duckdb"
