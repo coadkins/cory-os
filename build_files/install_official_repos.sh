@@ -11,7 +11,7 @@ dnf5 install -y \
     unixODBC-devel \
 	libcurl-devel \
 	openssl-devel \
-	glpk-devel ]
+	glpk-devel \
 	incus
 
 
