@@ -217,35 +217,84 @@ disable-system76:
       fi
       fi
    done
-# Create ds-distrobox
-create-ds-distrobox:
-  #!/usr/bin/env bash
-  set -euo pipefail
 
-  # Get the current working directory name and full path
-  PWD_NAME=$(basename "$1")
-  PWD_PATH="$1"
-  
-  # Display what we're about to do
-  echo "Creating distrobox container with:"
-  echo "  Name: $PWD_NAME"
-  echo "  Home: $PWD_PATH"
-  echo "  Image: ghcr.io/coadkins/ds-distrobox:latest"
-  
-  # Check if a container with this name already exists
-  if distrobox list | grep -q "^$PWD_NAME"; then
-    echo "Error: A distrobox container named '$PWD_NAME' already exists."
-    echo "Please remove it first with: distrobox rm $PWD_NAME"
-    exit 1
+use-incus
+  #!/usr/bin/env bash
+  # Copied exactly from https://github.com/ublue-os/aurora/blob/main/system_files/dx/usr/libexec/aurora-incus
+  # All the pieces needed to enable incus on Developer Experience Hosts
+  # This script is meant to be run on a aurora-dx host
+  if [ "$EUID" -eq 0 ]
+  then
+      echo "This script should not be run as root"
+      exit
   fi
-  
-  # Run the distrobox create command
-  echo "Running distrobox create..."
-  distrobox create \
-      --image ghcr.io/coadkins/ds-distrobox:latest \
-      --name $PWD_NAME \
-      --home $PWD_PATH \
-      --init
-  
-  echo "Container '$PWD_NAME' created successfully!"
-  echo "To enter the container, run: distrobox enter $PWD_NAME"
+
+  source /usr/lib/ujust/ujust.sh
+  # add user to incus-admin group
+  pkexec usermod -aG incus-admin $USER
+
+  # check for, then add necessary entries to /etc/subuid and /etc/subgid
+  echo -e "\nChecking for necessary entries in /etc/subuid and /etc/subgid"
+  if grep -q "root:1000000:1000000000" /etc/subuid
+  then
+      echo -e "\n  * subuid root range"
+  else
+      echo "root:1000000:1000000000" | pkexec tee -a /etc/subuid
+  fi
+
+  if grep -q "root:1000000:1000000000" /etc/subgid
+  then
+      echo -e "\n  * subgid root range"
+  else
+      echo "root:1000000:1000000000" | pkexec tee -a /etc/subgid
+  fi
+
+  if grep -q "root:$UID:1" /etc/subgid
+  then
+      echo -e "\n  * subgid root->user"
+  else
+      echo "root:$UID:1" | pkexec tee -a /etc/subgid
+  fi
+
+  if grep -q "root:$UID:1" /etc/subuid
+  then
+      echo ""
+      echo "  * subuid root->user"
+  else
+      echo "root:$UID:1" | sudo tee -a /etc/subuid
+  fi
+
+  echo -e "\nEnabling incus services"
+  pkexec /usr/bin/bash <<EOF
+  systemctl enable --now incus-workaround.service
+  systemctl enable --now lxcfs
+  systemctl enable --now incus.socket
+  systemctl start incus.service
+  systemctl enable incus-startup
+  EOF
+
+  echo -e "\nInitializing Incus"
+  echo "Choose your Incus installation type:"
+  OPTION=$(Choose Minimal Custom Cancel)
+  if [[ "${OPTION,,}" =~ ^minimal ]]; then
+      pkexec incus admin init --minimal
+      echo -e "\nAdding the incus bridge to the trusted firewall zone"
+      pkexec firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
+      pkexec firewall-cmd --reload
+  fi
+  if [[ "${OPTION,,}" =~ ^custom ]]; then
+      pkexec incus admin init
+      echo ""
+      cat <<EOF
+  Add the incus bridge to the trusted firewall zone with
+  ```bash
+    sudo firewall-cmd --zone=trusted --change-interface=your-bridge --permanent
+    sudo firewall-cmd --reload
+  ```
+  EOF
+  fi
+  if [[ "${OPTION,,}" =~ ^cancel ]]; then
+      echo "You have chosen to cancel the Incus installation process"
+      exit 0
+  fi
+  echo -e "\nIncus has been ${green}${b}installed${n}. You can now run 'incus' to manage your containers."
