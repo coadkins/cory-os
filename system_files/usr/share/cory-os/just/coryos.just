@@ -218,53 +218,69 @@ disable-system76:
       fi
    done
 
-use-incus
-  #!/usr/bin/env bash
-  # Copied exactly from https://github.com/ublue-os/aurora/blob/main/system_files/dx/usr/libexec/aurora-incus
-  # All the pieces needed to enable incus on Developer Experience Hosts
-  # This script is meant to be run on a aurora-dx host
-  if [ "$EUID" -eq 0 ]
-  then
+# setup-incus: Configure the system and initialize Incus.
+setup-incus:
+#!/usr/bin/env bash
+  # This recipe wraps the original bash script to be run via `just`.
+  # It ensures the script is not run as root, sources necessary helper scripts,
+  # performs privileged operations using pkexec, and guides the user
+  # through the Incus initialization process.
+
+  set -euxo pipefail
+
+  # Ensure the script is not run as the root user.
+  if [ "$EUID" -eq 0 ]; then
       echo "This script should not be run as root"
-      exit
+      exit 1
   fi
 
+  # Source the ujust helper functions.
+  # This file must exist at the specified path for the recipe to work.
   source /usr/lib/ujust/ujust.sh
-  # add user to incus-admin group
+
+  # Add the current user to the 'incus-admin' group.
+  echo "Adding user '$USER' to the 'incus-admin' group..."
   pkexec usermod -aG incus-admin $USER
 
-  # check for, then add necessary entries to /etc/subuid and /etc/subgid
-  echo -e "\nChecking for necessary entries in /etc/subuid and /etc/subgid"
-  if grep -q "root:1000000:1000000000" /etc/subuid
-  then
-      echo -e "\n  * subuid root range"
+  # Check for and add necessary entries to /etc/subuid and /etc/subgid.
+  echo -e "\nChecking for necessary entries in /etc/subuid and /etc/subgid..."
+
+  # Define the required root range for subuids/subgids.
+  ROOT_RANGE="root:1000000:1000000000"
+  USER_SUBID="root:$UID:1"
+
+  # Check and configure /etc/subuid
+  if grep -q "^${ROOT_RANGE}$" /etc/subuid; then
+      echo "  * subuid root range already exists."
   else
-      echo "root:1000000:1000000000" | pkexec tee -a /etc/subuid
+      echo "Adding subuid root range..."
+      echo "$ROOT_RANGE" | pkexec tee -a /etc/subuid
   fi
 
-  if grep -q "root:1000000:1000000000" /etc/subgid
-  then
-      echo -e "\n  * subgid root range"
+  if grep -q "^${USER_SUBID}$" /etc/subuid; then
+      echo "  * subuid root->user mapping already exists."
   else
-      echo "root:1000000:1000000000" | pkexec tee -a /etc/subgid
+      echo "Adding subuid root->user mapping..."
+      echo "$USER_SUBID" | pkexec tee -a /etc/subuid
   fi
 
-  if grep -q "root:$UID:1" /etc/subgid
-  then
-      echo -e "\n  * subgid root->user"
+  # Check and configure /etc/subgid
+  if grep -q "^${ROOT_RANGE}$" /etc/subgid; then
+      echo "  * subgid root range already exists."
   else
-      echo "root:$UID:1" | pkexec tee -a /etc/subgid
+      echo "Adding subgid root range..."
+      echo "$ROOT_RANGE" | pkexec tee -a /etc/subgid
   fi
 
-  if grep -q "root:$UID:1" /etc/subuid
-  then
-      echo ""
-      echo "  * subuid root->user"
+  if grep -q "^${USER_SUBID}$" /etc/subgid; then
+      echo "  * subgid root->user mapping already exists."
   else
-      echo "root:$UID:1" | sudo tee -a /etc/subuid
+      echo "Adding subgid root->user mapping..."
+      echo "$USER_SUBID" | pkexec tee -a /etc/subgid
   fi
 
-  echo -e "\nEnabling incus services"
+  # Enable and start Incus services.
+  echo -e "\nEnabling and starting Incus services..."
   pkexec /usr/bin/bash <<EOF
   systemctl enable --now incus-workaround.service
   systemctl enable --now lxcfs
@@ -272,29 +288,33 @@ use-incus
   systemctl start incus.service
   systemctl enable incus-startup
   EOF
+  echo "Incus services enabled."
 
-  echo -e "\nInitializing Incus"
+  # Initialize Incus based on user choice.
+  echo -e "\nInitializing Incus..."
   echo "Choose your Incus installation type:"
   OPTION=$(Choose Minimal Custom Cancel)
+
   if [[ "${OPTION,,}" =~ ^minimal ]]; then
+      echo "Performing minimal Incus initialization..."
       pkexec incus admin init --minimal
-      echo -e "\nAdding the incus bridge to the trusted firewall zone"
+      echo -e "\nAdding the incus bridge to the trusted firewall zone..."
       pkexec firewall-cmd --zone=trusted --change-interface=incusbr0 --permanent
       pkexec firewall-cmd --reload
-  fi
-  if [[ "${OPTION,,}" =~ ^custom ]]; then
+  elif [[ "${OPTION,,}" =~ ^custom ]]; then
+      echo "Starting custom Incus initialization..."
       pkexec incus admin init
       echo ""
       cat <<EOF
-  Add the incus bridge to the trusted firewall zone with
-  ```bash
+  Add the incus bridge to the trusted firewall zone with:
+  \`\`\`bash
     sudo firewall-cmd --zone=trusted --change-interface=your-bridge --permanent
     sudo firewall-cmd --reload
-  ```
+  \`\`\`
   EOF
-  fi
-  if [[ "${OPTION,,}" =~ ^cancel ]]; then
-      echo "You have chosen to cancel the Incus installation process"
+  elif [[ "${OPTION,,}" =~ ^cancel ]]; then
+      echo "You have chosen to cancel the Incus initialization process."
       exit 0
   fi
-  echo -e "\nIncus has been ${green}${b}installed${n}. You can now run 'incus' to manage your containers."
+
+  echo -e "\nIncus has been installed. You can now run 'incus' to manage your containers."
