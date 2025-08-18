@@ -12,6 +12,7 @@ dnf5 install -y \
 	libcurl-devel \
 	openssl-devel \
 	glpk-devel \
-	incus
+	incus \
+	dpkg
 
 
