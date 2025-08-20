@@ -7,7 +7,7 @@ wget https://repo.librewolf.net/librewolf.repo -O /tmp/librewolf.repo
 dnf5 config-manager addrepo --from-repofile=/tmp/librewolf.repo
 declare -A RPM_PACKAGES=(
   ["copr:ublue-os/packages"]="ublue-brew"
-  ["wezfurlong/wezterm-nightly"]="wezterm"
+  ["copr:wezfurlong/wezterm-nightly"]="wezterm"
   ["terra"]="zed ghostty"
   ["repository"]="librewolf"
 )
