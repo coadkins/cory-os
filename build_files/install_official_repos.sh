@@ -13,6 +13,7 @@ dnf5 install -y \
 	openssl-devel \
 	glpk-devel \
 	incus \
-	dpkg
+	dpkg \
+	cockpit
 
 
