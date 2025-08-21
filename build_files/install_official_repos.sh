@@ -14,7 +14,6 @@ dnf5 install -y \
 	glpk-devel \
 	incus \
 	dpkg \
-	cockpit \
-	konqueror
+	cockpit
 
 
