@@ -2,7 +2,7 @@
 ARG BASE_IMAGE="bazzite"
 ARG FEDORA_VERSION="42"
 # Import akmods from bazzite to use system76 firmware
-FROM ghcr.io/ublue-os/akmods-extra:bazzite-${FEDORA_VERSION} AS akmods-extra
+FROM ghcr.io/ublue-os/akmods-extra:bazzite-42-6.15.9-106.bazzite.fc42.x86_64 AS akmods-extra
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
