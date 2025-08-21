@@ -15,6 +15,6 @@ dnf5 install -y \
 	incus \
 	dpkg \
 	cockpit \
-	konquerer
+	konqueror
 
 
