@@ -1,4 +1,4 @@
-name: Build from main branch 
+name: Build from box branch
 
 on:
   pull_request:
