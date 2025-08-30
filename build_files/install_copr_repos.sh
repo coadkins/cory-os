@@ -2,14 +2,8 @@
 set -ouex pipefail
 echo "installing COPR packages"
 
-# Add librewolf repo
-wget https://repo.librewolf.net/librewolf.repo -O /tmp/librewolf.repo
-dnf5 config-manager addrepo --from-repofile=/tmp/librewolf.repo
 declare -A RPM_PACKAGES=(
   ["copr:ublue-os/packages"]="ublue-brew"
-  ["copr:wezfurlong/wezterm-nightly"]="wezterm"
-  ["terra"]="zed ghostty"
-  ["repository"]="librewolf"
 )
 
 # install COPR repos

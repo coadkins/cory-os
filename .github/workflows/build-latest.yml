@@ -3,10 +3,10 @@ name: Build from main branch
 on:
   pull_request:
     branches:
-      - main
+      - box
   push:
     branches:
-      - main
+      - box
   merge_group:
   workflow_dispatch:
   schedule:
@@ -32,4 +32,4 @@ jobs:
           - bazzite
     with:
       base-image: ${{ matrix.base_image }}
-      image-tag: latest
+      image-tag: box-latest
