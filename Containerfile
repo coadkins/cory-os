@@ -2,27 +2,16 @@
 ARG BASE_IMAGE="bazzite"
 ARG FEDORA_VERSION="42"
 # Import akmods from bazzite to use system76 firmware
-FROM ghcr.io/ublue-os/akmods-extra:bazzite-42-6.16.4-104.bazzite.fc42 AS akmods-extra
+FROM ghcr.io/ublue-os/akmods-extra:bazzite-42-6.16.4-107.bazzite.fc42.x86_64 AS akmods-extra
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable-42.20250903
+FROM ghcr.io/ublue-os/bazzite:stable-42.20250911
 COPY system_files /
 
-## Other possible base images include:
-# FROM ghcr.io/ublue-os/bazzite:latest
-# FROM ghcr.io/ublue-os/bluefin-nvidia:stable
-# 
-# ... and so on, here are more base images
-# Universal Blue Images: https://github.com/orgs/ublue-os/packages
-# Fedora base image: quay.io/fedora/fedora-bootc:41
-# CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
-
-### MODIFICATIONS
-## make modifications desired in your image and install packages by modifying the build.sh script
-## the following RUN directive does all the things required to run "build.sh" as recommended.
+### MODIFICATIONS TO BASE IMAGE
 # use system76-driver and system76-io akmods
 RUN --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
