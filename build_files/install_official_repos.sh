@@ -15,6 +15,7 @@ dnf5 install -y \
 	incus \
 	dpkg \
 	cockpit \
-	openssh-server
+	openssh-server \
+	pam-kwallet
 
 
