@@ -14,6 +14,7 @@ dnf5 install -y \
 	glpk-devel \
 	incus \
 	dpkg \
-	cockpit
+	cockpit \
+	pam-kwallet
 
 
