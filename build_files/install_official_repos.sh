@@ -16,7 +16,8 @@ dnf5 install -y \
 	dpkg \
 	cockpit \
 	pam-kwallet \
-	layer-shell-qt
+	layer-shell-qt \
+	greetd
 
 
 
