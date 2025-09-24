@@ -15,6 +15,8 @@ dnf5 install -y \
 	incus \
 	dpkg \
 	cockpit \
-	pam-kwallet
+	pam-kwallet \
+	layer-shell-qt
+
 
 
