@@ -17,7 +17,9 @@ dnf5 install -y \
 	cockpit \
 	pam-kwallet \
 	layer-shell-qt \
-	greetd
+	greetd \
+	qt6-qtquick3d
+
 
 
 
