@@ -17,7 +17,7 @@ dnf5 install -y \
 	cockpit \
 	openssh-server \
 	pam-kwallet \
-	qt6-virtualkeyboard \
+	qt6-qtvirtualkeyboard \
 	layer-shell-qt
 
 
