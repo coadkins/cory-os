@@ -16,6 +16,8 @@ dnf5 install -y \
 	dpkg \
 	cockpit \
 	openssh-server \
-	pam-kwallet
+	pam-kwallet \
+	qt6-virtualkeyboard
+
 
 
